@@ -6,15 +6,19 @@ import ru.netology.model.Post;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static java.util.stream.Collectors.*;
 
 // Stub
 public class PostRepository {
     private ConcurrentHashMap<Integer, Post> concurrentHashMap;
-    private long idPost;
+    private AtomicLong idPost;
+    private final int NUMBER_FIRST_POST = 1;
 
     public PostRepository() {
         concurrentHashMap = new ConcurrentHashMap<>();
+        idPost = new AtomicLong(NUMBER_FIRST_POST);
     }
 
     public List<Post> all() {
@@ -22,7 +26,7 @@ public class PostRepository {
                 concurrentHashMap.entrySet()
                         .stream()
                         .map(e -> e.getValue())
-                        .collect(Collectors.toList());
+                        .collect(toList());
         return postList;
     }
 
@@ -39,8 +43,7 @@ public class PostRepository {
         if (post.getId() < 0) {
             throw new NotFoundException("Not found");
         } else if (post.getId() == 0) {
-            idPost++;
-            post.setId(idPost);
+            post.setId(idPost.getAndIncrement());
             concurrentHashMap.put(Math.toIntExact(post.getId()), post);
         } else {
             var foundPost = concurrentHashMap.get(Math.toIntExact(post.getId()));
