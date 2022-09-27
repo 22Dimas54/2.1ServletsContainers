@@ -1,5 +1,6 @@
 package ru.netology.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 
@@ -11,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static java.util.stream.Collectors.*;
 
 // Stub
+@Repository
 public class PostRepository {
     private ConcurrentHashMap<Integer, Post> concurrentHashMap;
     private AtomicLong idPost;
